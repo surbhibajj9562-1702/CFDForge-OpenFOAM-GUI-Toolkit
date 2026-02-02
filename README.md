@@ -1,6 +1,6 @@
-# CFD-FOSSEE (OpenFOAM GUI) Screening Submission
+# CFD-FOSSEE (OpenFOAM GUI) 
 
-This project is a screening submission for the CFD-FOSSEE OpenFOAM GUI internship. It consists of two independent parts aligned with the screening task: (1) a Python tree-based configuration package with YAML and CLI support, and (2) a Blender addon for visual multi-block geometry construction. The intent is to reduce manual effort in defining structured configurations and geometries, with high-level relevance to OpenFOAM GUI workflows (e.g. hierarchical solver/block configuration and multi-block mesh construction).
+This project consists of two independent parts (1) a Python tree-based configuration package with YAML and CLI support, and (2) a Blender addon for visual multi-block geometry construction. The intent is to reduce manual effort in defining structured configurations and geometries, with high-level relevance to OpenFOAM GUI workflows (e.g. hierarchical solver/block configuration and multi-block mesh construction).
 
 ---
 
