@@ -1,0 +1,46 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cfd-fossee-tree"
+version = "1.0.0"
+description = "CFD-FOSSEE Tree Package - Binary and General Tree with YAML support"
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.8"
+authors = [
+    {name = "CFD-FOSSEE Screening"}
+]
+keywords = ["tree", "yaml", "binary-tree", "general-tree", "cfd-fossee"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+]
+dependencies = [
+    "PyYAML>=6.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+]
+
+[project.scripts]
+tree-cli = "tree_package.cli:main"
+
+[project.urls]
+Repository = "https://github.com/fossee/cfd-fossee"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["tree_package*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "-v --tb=short"

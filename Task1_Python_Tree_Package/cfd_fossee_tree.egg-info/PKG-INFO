@@ -1,0 +1,209 @@
+Metadata-Version: 2.4
+Name: cfd-fossee-tree
+Version: 1.0.0
+Summary: CFD-FOSSEE Tree Package - Binary and General Tree with YAML support
+Author: CFD-FOSSEE Screening
+License: MIT
+Project-URL: Repository, https://github.com/fossee/cfd-fossee
+Keywords: tree,yaml,binary-tree,general-tree,cfd-fossee
+Classifier: Development Status :: 4 - Beta
+Classifier: Intended Audience :: Developers
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+Requires-Dist: PyYAML>=6.0
+Provides-Extra: dev
+Requires-Dist: pytest>=7.0; extra == "dev"
+
+# CFD-FOSSEE Tree Package
+
+A pip-installable Python package for working with **Binary** and **General** tree structures, with YAML serialization, traversal utilities, and CLI support.
+
+## Installation
+
+```bash
+cd Task1_Python_Tree_Package
+pip install -e .
+# Or from project root:
+pip install -e ./Task1_Python_Tree_Package
+```
+
+## Requirements
+
+- Python 3.8+
+- PyYAML 6.0+
+
+## Usage Examples
+
+### Python API
+
+```python
+from tree_package import (
+    create_binary_tree,
+    BinaryTreeOperations,
+    tree_to_yaml,
+    yaml_to_tree,
+    TreeConfig,
+    TreeType,
+    TraversalMixin,
+)
+
+# Create binary tree
+root = create_binary_tree(1)
+root = BinaryTreeOperations.add_node_by_path(root, "", 2, "L")   # left child of root
+root = BinaryTreeOperations.add_node_by_path(root, "", 3, "R")   # right child of root
+root = BinaryTreeOperations.add_node_by_path(root, "L", 4, "L")  # left of left
+
+# Pretty print
+print(BinaryTreeOperations.print_tree(root))
+
+# Traversal
+print("Preorder:", list(TraversalMixin.preorder(root)))
+print("Inorder:", list(TraversalMixin.inorder(root)))
+print("Level-order:", list(TraversalMixin.level_order(root)))
+
+# YAML round-trip
+yaml_str = tree_to_yaml(root)
+root2 = yaml_to_tree(yaml_str)
+```
+
+### General Tree
+
+```python
+from tree_package import create_general_tree, GeneralTreeOperations
+from tree_package.config import TreeConfig, TreeType
+
+# Create general tree (n children)
+root = create_general_tree("root")
+root = GeneralTreeOperations.add_node_by_path(root, "", "A")   # append child
+root = GeneralTreeOperations.add_node_by_path(root, "", "B")
+root = GeneralTreeOperations.add_node_by_path(root, "0", "A1") # child of first child
+
+config = TreeConfig(tree_type=TreeType.GENERAL)
+yaml_str = tree_to_yaml(root, config=config)
+```
+
+### Sample YAML Format
+
+**Binary Tree:**
+
+```yaml
+value: 1
+left:
+  value: 2
+  left:
+    value: 4
+  right:
+    value: 5
+right:
+  value: 3
+```
+
+**General Tree:**
+
+```yaml
+value: root
+children:
+  - value: A
+    children:
+      - value: A1
+      - value: A2
+  - value: B
+    children: []
+```
+
+## CLI Interface
+
+```bash
+# Build tree from YAML and print
+tree-cli build sample_binary.yaml
+tree-cli --type general build sample_general.yaml
+
+# Print tree (optionally subtree from path)
+tree-cli print sample_binary.yaml
+tree-cli print sample_binary.yaml --from-path L
+
+# Export tree to YAML
+tree-cli export sample_binary.yaml --output out.yaml
+
+# Print traversal order
+tree-cli traverse sample_binary.yaml --order preorder
+tree-cli traverse sample_binary.yaml --order level
+```
+
+## CFD Interpretation
+
+The tree can optionally represent a **multi-block CFD domain**:
+
+- **Node = block**: Each tree node corresponds to one block in the grid. The `value` field holds block data (e.g. label or ID).
+- **Parent–child = adjacency**: A parent and its child nodes represent neighbouring blocks. Tree edges encode block-to-block connectivity.
+- **Optional metadata** (no change to CLI or YAML format): Nodes may include `block_dimensions` (e.g. `[nx, ny, nz]`), `block_index`, and `adjacency` (list of neighbour indices). These are ignored if absent.
+
+**Example: tree → CFD blocks**
+
+```yaml
+value: block_0
+block_index: 0
+block_dimensions: [10, 10, 10]
+adjacency: [1, 2]
+children:
+  - value: block_1
+    block_index: 1
+  - value: block_2
+    block_index: 2
+```
+
+Here, the root is block 0; its children are blocks 1 and 2 (adjacent to block 0). Optional fields are backward-compatible: existing YAML without them works unchanged.
+
+## Running Tests
+
+```bash
+cd Task1_Python_Tree_Package
+pip install -e ".[dev]"
+pytest
+# Or single command:
+pip install -e . pytest && pytest
+```
+
+Tests cover:
+
+- Tree operations (create, add, delete, edit, print)
+- YAML parsing and serialization
+- Edge cases (empty tree, malformed YAML, invalid paths)
+- Traversal utilities (inorder, preorder, postorder, level-order)
+- Validation (cycle detection)
+
+## Project Structure
+
+```
+Task1_Python_Tree_Package/
+├── tree_package/
+│   ├── __init__.py
+│   ├── node.py          # BinaryNode, GeneralNode
+│   ├── binary_tree.py   # Binary tree operations
+│   ├── general_tree.py  # General tree operations
+│   ├── yaml_handler.py  # YAML parse/serialize
+│   ├── traversal.py     # Traversal utilities
+│   ├── validation.py    # Tree validation
+│   ├── config.py        # Tree type config
+│   ├── exceptions.py    # Custom exceptions
+│   └── cli.py           # CLI interface
+├── tests/
+│   ├── test_binary_tree.py
+│   ├── test_general_tree.py
+│   ├── test_yaml.py
+│   ├── test_traversal.py
+│   └── test_validation.py
+├── sample_binary.yaml
+├── sample_general.yaml
+├── pyproject.toml
+├── requirements.txt
+└── README.md
+```
+
+## License
+
+MIT

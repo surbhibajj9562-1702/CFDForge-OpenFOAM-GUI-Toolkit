@@ -1,0 +1,16 @@
+# Sample General Tree - CFD-FOSSEE
+# Format: value, optional children list
+
+value: root
+children:
+  - value: A
+    children:
+      - value: A1
+      - value: A2
+  - value: B
+    children: []
+  - value: C
+    children:
+      - value: C1
+        children:
+          - value: C1a

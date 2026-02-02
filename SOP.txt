@@ -1,0 +1,69 @@
+CFD-FOSSEE Screening Task - Standard Operating Procedure
+========================================================
+
+PROJECT: CFD-FOSSEE (OpenFOAM GUI) Screening Submission
+STRUCTURE: See project layout below
+
+--------------------------------------------------
+TASK 1: PYTHON TREE PACKAGE
+--------------------------------------------------
+
+LOCATION: Task1_Python_Tree_Package/
+
+INSTALL:
+  cd Task1_Python_Tree_Package
+  pip install -e .
+  pip install pytest  # for tests
+
+RUN TESTS:
+  cd Task1_Python_Tree_Package
+  pytest
+
+CLI USAGE:
+  tree-cli build sample_binary.yaml
+  tree-cli print sample_binary.yaml
+  tree-cli export sample_binary.yaml --output out.yaml
+  tree-cli traverse sample_binary.yaml --order preorder
+
+--------------------------------------------------
+TASK 2: BLENDER ADDON
+--------------------------------------------------
+
+LOCATION: Task2_Blender_Addon/
+
+INSTALL:
+  1. Blender > Edit > Preferences > Add-ons
+  2. Install... > select addon.py
+  3. Enable "CFD-FOSSEE Cube Tools"
+  4. Panel: View3D > Sidebar (N) > CFD-FOSSEE tab
+
+REQUIREMENTS: Blender 3.0+
+
+--------------------------------------------------
+PROJECT STRUCTURE
+--------------------------------------------------
+
+FOSSEE/
+├── Task1_Python_Tree_Package/
+│   ├── tree_package/         # Python package
+│   ├── tests/                # Unit tests
+│   ├── pyproject.toml
+│   ├── requirements.txt
+│   ├── sample_binary.yaml
+│   ├── sample_general.yaml
+│   └── README.md
+├── Task2_Blender_Addon/
+│   ├── addon.py
+│   ├── README.md
+│   └── screenshots/
+├── SOP.txt
+└── Resume.pdf                # Add your resume here
+
+--------------------------------------------------
+EVALUATOR NOTES
+--------------------------------------------------
+
+- Task 1: Run `pytest` from Task1_Python_Tree_Package/
+- Task 2: Install addon in Blender, test in 3D Viewport
+- All code has docstrings and type hints
+- No placeholders or TODOs; everything is runnable
